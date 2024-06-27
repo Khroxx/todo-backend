@@ -1,10 +1,27 @@
 from django.shortcuts import render
-from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.views import ObtainAuthToken, APIView
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 
+from todolist.models import TodoItem
+from todolist.serializers import TodoItemSerializer
+
 
 # Create your views here.
+
+class TodoItemView(APIView):
+    """
+    View to list all Todo items in the system
+    * R
+    """
+    # authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = []
+    
+    def get(self, request, format=None):
+        todos = TodoItem.objects.all()
+        serializer = TodoItemSerializer(todos, many=True)
+        return Response(serializer.data)
+        
 
 class loginView(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
